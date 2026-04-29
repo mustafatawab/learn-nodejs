@@ -16,15 +16,18 @@ export const createTodoHandler = async (req: Request, res: Response) => {
 
 export const getAllTodosHandler = async (req: Request, res: Response) => {
   const todos = await getTodos();
-  res.json(todos);
+  if (todos.length == 0) {
+    return res.json({ message: "No todos found" });
+  }
+  return res.json(todos);
 };
 
 export const getSingleTodoHandler = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   const todo = await getSingleTodo(id as string);
-
-  res.json(todo);
+    
+  return res.json(todo);
 };
 
 export const updateTodoHandler = async (req: Request, res: Response) => {
@@ -34,7 +37,7 @@ export const updateTodoHandler = async (req: Request, res: Response) => {
 
   const todo = await updateTodo(id as string, data);
 
-  res.json(todo);
+  return res.json(todo);
 };
 
 export const deleteTodoHandler = async (req: Request, res: Response) => {
@@ -42,5 +45,5 @@ export const deleteTodoHandler = async (req: Request, res: Response) => {
 
   await deleteTodo(id as string);
 
-  res.status(204).send();
+  return res.status(204).send();
 };
