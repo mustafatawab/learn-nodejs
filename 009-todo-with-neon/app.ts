@@ -1,5 +1,5 @@
 import express from "express";
-import { todoRouter } from "./src/todo/todo.router";
+import { todoRouter } from "./src/module/todo/todo.router";
 export const app = express();
 
 app.use(express.json());

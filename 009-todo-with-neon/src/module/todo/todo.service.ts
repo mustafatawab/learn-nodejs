@@ -1,5 +1,6 @@
 import type { TodoCreateInput, TodoUpdateInput } from "./todo.schema";
-import { prisma } from "../lib/prisma";
+import { prisma } from "../../shared/lib/prisma";
+import { AppError } from "../../shared/error/AppError";
 
 export const createTodo = async (input: TodoCreateInput) => {
   const todo = await prisma.todo.create({
@@ -56,9 +57,12 @@ export const deleteTodo = async (id: string) => {
     where: { id: id },
   });
 
-  if (!existingTodo) throw new Error("Todo not found");
+  if (!existingTodo) throw new AppError("Todo not found", 404);
 
-  await prisma.todo.delete({
+  const deletedTodo = await prisma.todo.delete({
     where: { id: id },
   });
+  
+
+  return deletedTodo;
 };

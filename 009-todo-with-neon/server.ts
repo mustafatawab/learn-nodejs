@@ -1,5 +1,5 @@
 import { app } from "./app";
-import { env } from "./src/config/env";
+import { env } from "./src/shared/config/env";
 
 app.listen(9000, () => {
   console.log("Server is running on port 9000");
