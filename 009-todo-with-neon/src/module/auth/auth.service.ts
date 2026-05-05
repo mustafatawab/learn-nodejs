@@ -15,6 +15,7 @@ import {
 } from "../../shared/utils/jwt";
 
 export const registerUser = async (input: RegisterInput) => {
+  console.log("registering user")
   const existingUser = await prisma.user.findUnique({
     where: { email: input.email },
   });
@@ -62,29 +63,25 @@ export const loginUser = async (input: LoginInput) => {
   };
 };
 
+export const getMe = async (userId: string) => {
+  const user = await prisma.user.findFirst({
+    where: { id: userId },
+  });
 
+  if (!user) throw new AppError("User not found ", 404);
 
-export const getMe = async (userId : string) => {
-    const user = await prisma.user.findFirst({
-        where : { id : userId}
-    })
+  const { password, ...withOutPassword } = user;
 
-    if (!user) throw new AppError("User not found " , 404)
-
-    const { password , ...withOutPassword} = user
-
-    return withOutPassword
-
-}
-
-
+  return withOutPassword;
+};
 
 export const forgotPassword = async (input: ForgotPasswordInput) => {
-    const user = await prisma.user.findUnique({
-        where : { email : input.email}
-    })
+  const user = await prisma.user.findUnique({
+    where: { email: input.email },
+  });
 
-    if (!user) throw new AppError(`User with ${input.email} does not exists ` , 404)
+  if (!user)
+    throw new AppError(`User with ${input.email} does not exists `, 404);
 
-    return user
-}
+  return user;
+};

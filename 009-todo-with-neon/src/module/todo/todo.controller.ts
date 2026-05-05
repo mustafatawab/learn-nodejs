@@ -7,14 +7,16 @@ import {
   getTodos,
 } from "./todo.service";
 
+import { todoCreateSchema, todoUpdateSchema } from "./todo.schema"
+
 export const createTodoHandler = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const data = req.body;
-    const todo = await createTodo(data);
+    const validatedData = todoCreateSchema.parse(req.body)
+    const todo = await createTodo(validatedData);
 
     return res.status(201).json(todo);
   } catch (error) {
@@ -61,9 +63,9 @@ export const updateTodoHandler = async (
   try {
     const { id } = req.params;
 
-    const data = req.body;
+    const validatedData = todoUpdateSchema.parse(req.body)
 
-    const todo = await updateTodo(id as string, data);
+    const todo = await updateTodo(id as string, validatedData);
 
     return res.json(todo);
   } catch (error) {
