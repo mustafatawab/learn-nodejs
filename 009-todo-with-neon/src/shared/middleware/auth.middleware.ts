@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import { AppError } from "../error/AppError";
 import { verifyAccessToken } from "../utils/jwt";
 
-export const  authenticate =  (
+export const authenticate = (
   req: Request,
   res: Response,
   next: NextFunction,

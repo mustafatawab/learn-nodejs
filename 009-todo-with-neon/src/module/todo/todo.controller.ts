@@ -7,7 +7,7 @@ import {
   getTodos,
 } from "./todo.service";
 
-import { todoCreateSchema, todoUpdateSchema } from "./todo.schema"
+import { todoCreateSchema, todoUpdateSchema } from "./todo.schema";
 
 export const createTodoHandler = async (
   req: Request,
@@ -15,8 +15,9 @@ export const createTodoHandler = async (
   next: NextFunction,
 ) => {
   try {
-    const validatedData = todoCreateSchema.parse(req.body)
-    const todo = await createTodo(validatedData);
+    const userId = req.user?.userId;
+    const validatedData = todoCreateSchema.parse(req.body);
+    const todo = await createTodo(validatedData, userId);
 
     return res.status(201).json(todo);
   } catch (error) {
@@ -30,7 +31,8 @@ export const getAllTodosHandler = async (
   next: NextFunction,
 ) => {
   try {
-    const todos = await getTodos();
+    const userId = req.user?.userId;
+    const todos = await getTodos(userId);
     if (todos.length == 0) {
       return res.json({ message: "No todos found" });
     }
@@ -47,9 +49,9 @@ export const getSingleTodoHandler = async (
 ) => {
   try {
     const { id } = req.params;
-    const todo = await getSingleTodo(id as string);
+    const userId = req.user?.userId;
+    const todo = await getSingleTodo(id as string, userId);
     return res.json(todo);
-
   } catch (error) {
     next(error);
   }
@@ -61,11 +63,12 @@ export const updateTodoHandler = async (
   next: NextFunction,
 ) => {
   try {
+    const userId = req.user?.userId;
     const { id } = req.params;
 
-    const validatedData = todoUpdateSchema.parse(req.body)
+    const validatedData = todoUpdateSchema.parse(req.body);
 
-    const todo = await updateTodo(id as string, validatedData);
+    const todo = await updateTodo(id as string, userId, validatedData);
 
     return res.json(todo);
   } catch (error) {
@@ -80,8 +83,9 @@ export const deleteTodoHandler = async (
 ) => {
   try {
     const { id } = req.params;
+    const userId = req.user?.userId;
 
-    const deletedTodo = await deleteTodo(id as string);
+    const deletedTodo = await deleteTodo(userId, id as string);
 
     return res
       .status(200)

@@ -2,9 +2,10 @@ import type { TodoCreateInput, TodoUpdateInput } from "./todo.schema";
 import { prisma } from "../../shared/lib/prisma";
 import { AppError } from "../../shared/error/AppError";
 
-export const createTodo = async (input: TodoCreateInput) => {
+export const createTodo = async (input: TodoCreateInput , userId : string) => {
   const todo = await prisma.todo.create({
     data: {
+      userId,
       title: input.title,
       ...(input.description && { description: input.description }),
       completed: input.completed,
@@ -14,21 +15,23 @@ export const createTodo = async (input: TodoCreateInput) => {
   return todo;
 };
 
-export const getTodos = async () => {
-  const todos = await prisma.todo.findMany();
+export const getTodos = async (userId : string) => {
+  const todos = await prisma.todo.findMany({
+    where : { userId }
+  });
   return todos;
 };
 
-export const getSingleTodo = async (id: string) => {
+export const getSingleTodo = async (id: string , userId : string) => {
   const todo = await prisma.todo.findUnique({
-    where: { id: id },
+    where: { id , userId },
   });
   return todo;
 };
 
-export const updateTodo = async (id: string, input: TodoUpdateInput) => {
+export const updateTodo = async (id: string, userId: string, input: TodoUpdateInput) => {
   const existingTodo = await prisma.todo.findUnique({
-    where: { id: id },
+    where: { id , userId },
   });
 
   if (!existingTodo) throw new Error("Todo not found");
@@ -52,9 +55,9 @@ export const updateTodo = async (id: string, input: TodoUpdateInput) => {
   return todo;
 };
 
-export const deleteTodo = async (id: string) => {
+export const deleteTodo = async (id: string , userId : string) => {
   const existingTodo = await prisma.todo.findUnique({
-    where: { id: id },
+    where: { id, userId},
   });
 
   if (!existingTodo) throw new AppError("Todo not found", 404);
