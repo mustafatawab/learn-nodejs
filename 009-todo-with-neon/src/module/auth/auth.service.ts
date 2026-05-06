@@ -15,7 +15,7 @@ import {
 } from "../../shared/utils/jwt";
 
 export const registerUser = async (input: RegisterInput) => {
-  console.log("registering user")
+  console.log("registering user");
   const existingUser = await prisma.user.findUnique({
     where: { email: input.email },
   });

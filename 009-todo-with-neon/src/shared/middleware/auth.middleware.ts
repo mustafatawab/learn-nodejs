@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import { AppError } from "../error/AppError";
 import { verifyAccessToken } from "../utils/jwt";
 
-export const authenticate = (
+export const  authenticate =  (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -10,7 +10,7 @@ export const authenticate = (
   try {
     const accessToken = req.cookies.accessToken;
     if (!accessToken) {
-      throw new AppError("Authentication Token is missing ", 404);
+      throw new AppError("Authentication Token is missing ", 401);
     }
 
     const decoded = verifyAccessToken(accessToken);
