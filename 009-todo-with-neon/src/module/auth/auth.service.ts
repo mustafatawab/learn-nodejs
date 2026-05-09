@@ -76,20 +76,18 @@ export const getMe = async (userId: string) => {
 };
 
 
-export const logout = async () => {
-    
-}
 
 
-// export const forgotPassword = async (input: ForgotPasswordInput) => {
-//   const user = await prisma.user.findUnique({
-//     where: { email: input.email },
-//   });
 
-//   if (!user)
-//     throw new AppError(`User with ${input.email} does not exists `, 404);
+export const forgotPassword = async (input: ForgotPasswordInput) => {
+  const user = await prisma.user.findUnique({
+    where: { email: input.email },
+  });
 
-//   return user;
-// };
+  if (!user)
+    throw new AppError(`User with ${input.email} does not exists `, 404);
+
+  return user;
+};
 
 

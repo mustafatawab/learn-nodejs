@@ -78,3 +78,19 @@ export const getMeHandler = async (
     return next(error);
   }
 };
+
+
+export const logoutUserHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+
+    return res.status(200).json({ message: "User logged out successfully" });
+  } catch (error) {
+    return next(error);
+  }
+};
