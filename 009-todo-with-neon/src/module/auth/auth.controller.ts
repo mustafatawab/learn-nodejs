@@ -33,15 +33,15 @@ export const loginUserHandler = async (
 
     res.cookie("accessToken", result.accessToken, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60,
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     res.cookie("refreshToken", result.refreshToken, {
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    return res.status(201).json({ message: "User logged in successfully" });
+    return res.status(200).json({ message: "User logged in successfully" });
   } catch (error) {
     return next(error);
   }

@@ -32,11 +32,11 @@ export const getAllTodosHandler = async (
 ) => {
   try {
     const userId = req.user?.userId;
-    const todos = await getTodos(userId);
+    const  todos = await getTodos(userId);
     if (todos.length == 0) {
       return res.json({ message: "No todos found" });
     }
-    return res.json(todos);
+    return res.json({ todos });
   } catch (error) {
     next(error);
   }

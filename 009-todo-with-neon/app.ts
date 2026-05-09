@@ -47,6 +47,7 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     });
   }
 
+  console.error("Unexpected Error: ", error);
   return res
     .status(500)
     .json({ status: false, error: "Internal Server Error" });

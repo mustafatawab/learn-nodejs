@@ -2,6 +2,7 @@ import type { TodoCreateInput, TodoUpdateInput } from "./todo.schema";
 import { prisma } from "../../shared/lib/prisma";
 import { AppError } from "../../shared/error/AppError";
 
+
 export const createTodo = async (input: TodoCreateInput , userId : string) => {
   const todo = await prisma.todo.create({
     data: {
@@ -19,7 +20,9 @@ export const getTodos = async (userId : string) => {
   const todos = await prisma.todo.findMany({
     where : { userId }
   });
-  return todos;
+
+  
+  return todos
 };
 
 export const getSingleTodo = async (id: string , userId : string) => {
