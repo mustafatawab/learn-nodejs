@@ -76,6 +76,31 @@ export const getMe = async (userId: string) => {
 };
 
 
+export const refreshToken = async (token: string)  => {
+  try {
+    const decoded = verifyRefreshToken(token);
+
+    if (!decoded) {
+      throw new AppError("Invalid refresh token", 401);
+    }
+
+    const payload = {
+      userId: decoded.userId,
+      email: decoded.email,
+    };
+
+    const newAccessToken = generateToken(payload, "1d");
+
+    const newRefreshToken = generateRefreshToken(payload, "7d");
+
+    return {
+      newAccessToken,
+      newRefreshToken
+    };
+  } catch (error) {
+    throw new AppError("Invalid refresh token", 401);
+  }
+};
 
 
 

@@ -1,9 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
-import { registerUser, loginUser, getMe } from "./auth.service";
+import { registerUser, loginUser, getMe, refreshToken } from "./auth.service";
 
 import { registerSchema, loginSchema } from "./auth.schema";
 import { AppError } from "../../shared/error/AppError";
-import { verifyAccessToken } from "../../shared/utils/jwt"
+import { verifyAccessToken } from "../../shared/utils/jwt";
 
 export const registerUserHandler = async (
   req: Request,
@@ -53,17 +53,16 @@ export const getMeHandler = async (
   next: NextFunction,
 ) => {
   try {
-    
     console.log("Get me handler working ....");
     // const token = req.cookies.accessToken
-    
+
     // console.log("Token " , token)
-    
+
     // const decodedData = verifyAccessToken(token)
 
     // const userId = decodedData?.userId
 
-    const userId = req.user?.userId
+    const userId = req.user?.userId;
 
     if (!userId) {
       throw new AppError("Unauthorized - no user in request", 401);
@@ -79,7 +78,6 @@ export const getMeHandler = async (
   }
 };
 
-
 export const logoutUserHandler = async (
   req: Request,
   res: Response,
@@ -90,6 +88,32 @@ export const logoutUserHandler = async (
     res.clearCookie("refreshToken");
 
     return res.status(200).json({ message: "User logged out successfully" });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const refreshTokenHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const token = req.cookies.refreshToken;
+
+    const { newAccessToken, newRefreshToken } = await refreshToken(token);
+
+    res.cookie("accessToken", newAccessToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({ accessToken: newAccessToken });
   } catch (error) {
     return next(error);
   }

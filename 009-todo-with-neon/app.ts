@@ -40,7 +40,7 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   }
 
   if (error.name === "ZodError" || error.issues) {
-    return res.status(404).json({
+    return res.status(422).json({
       status: false,
       message: "Validation Error",
       error: error.errors || error.issues,
