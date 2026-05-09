@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { registerUser, loginUser, getMe, forgotPassword } from "./auth.service";
+import { registerUser, loginUser, getMe } from "./auth.service";
 
 import { registerSchema, loginSchema } from "./auth.schema";
 import { AppError } from "../../shared/error/AppError";

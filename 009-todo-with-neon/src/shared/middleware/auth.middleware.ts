@@ -16,7 +16,9 @@ export const authenticate = (
     const decoded = verifyAccessToken(accessToken);
 
     // const token = authHeader.split(" ")[1];
-
+    if (!decoded) {
+      throw new AppError("The user not found ", 401);
+    }
     req.user = decoded;
 
     next();
