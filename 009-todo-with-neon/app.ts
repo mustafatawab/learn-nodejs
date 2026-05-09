@@ -9,6 +9,7 @@ import { AppError } from "./src/shared/error/AppError";
 
 export const app = express();
 
+// allows your frontend to talk to the API
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:3000",
@@ -16,16 +17,23 @@ app.use(
   }),
 );
 
+// lets you read req.cookies (needed for your JWT)
 app.use(cookieParser());
 
+//  parses incoming JSON request bodies
 app.use(express.json());
 
+// registered before authenticate, so login/register don't require a token
 app.use("/api/auth", authRouter);
 
+// mounted globally — everything after this point is protected
 app.use(authenticate);
 
+// Todos Protected APIs
 app.use("/api/todos", todoRouter);
 
+
+// Whenever any middleware or route calls next(error), Express skips everything else and comes straight here.
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof AppError) {
     return res.status(error.statusCode).json({ error: error.message });
