@@ -10,7 +10,7 @@ export const authenticate = (
   try {
     const accessToken = req.cookies.accessToken;
     if (!accessToken) {
-      throw new AppError("Authentication Token is missing ", 401);
+      throw new AppError("Authentication Token is missing. Please login again. ", 401);
     }
 
     const decoded = verifyAccessToken(accessToken);
