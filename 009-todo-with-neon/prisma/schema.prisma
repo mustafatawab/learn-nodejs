@@ -29,6 +29,7 @@ model User {
   email     String   @unique
   gender    String?
   password  String
+  refreshToken String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

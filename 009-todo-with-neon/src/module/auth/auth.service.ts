@@ -1,5 +1,6 @@
 import { AppError } from "../../shared/error/AppError";
 import { prisma } from "../../shared/lib/prisma";
+
 import type {
   RegisterInput,
   LoginInput,
@@ -57,6 +58,13 @@ export const loginUser = async (input: LoginInput) => {
 
   const refreshToken = generateRefreshToken(payload, "7d");
 
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      refreshToken,
+    },
+  });
+
   return {
     accessToken,
     refreshToken,
@@ -75,13 +83,27 @@ export const getMe = async (userId: string) => {
   return withOutPassword;
 };
 
-
-export const refreshToken = async (token: string)  => {
-  try {
+export const refreshToken = async (token: string) => {
+  
     const decoded = verifyRefreshToken(token);
 
     if (!decoded) {
       throw new AppError("Invalid refresh token", 401);
+    }
+
+    const checkTokenInDb = await prisma.user.findFirst({
+      where: {
+        id: decoded.userId,
+        refreshToken: token,
+      },
+    });
+
+    if (!checkTokenInDb) {
+      await prisma.user.update({
+        where: { id: decoded.userId },
+        data: { refreshToken: null },
+      });
+      throw new AppError("Refresh token not found in the database", 401);
     }
 
     const payload = {
@@ -93,16 +115,19 @@ export const refreshToken = async (token: string)  => {
 
     const newRefreshToken = generateRefreshToken(payload, "7d");
 
+    await prisma.user.update({
+      where: { id: decoded.userId },
+      data: {
+        refreshToken: newRefreshToken,
+      },
+    });
+
     return {
       newAccessToken,
-      newRefreshToken
+      newRefreshToken,
     };
-  } catch (error) {
-    throw new AppError("Invalid refresh token", 401);
-  }
+  
 };
-
-
 
 export const forgotPassword = async (input: ForgotPasswordInput) => {
   const user = await prisma.user.findUnique({
@@ -114,5 +139,3 @@ export const forgotPassword = async (input: ForgotPasswordInput) => {
 
   return user;
 };
-
-
