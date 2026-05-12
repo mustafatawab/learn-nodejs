@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { registerUser, loginUser, getMe, refreshToken } from "./auth.service";
+import { registerUser, loginUser, getMe, refreshToken, logoutUser } from "./auth.service";
 
 import { registerSchema, loginSchema } from "./auth.schema";
 import { AppError } from "../../shared/error/AppError";
@@ -84,8 +84,19 @@ export const logoutUserHandler = async (
   next: NextFunction,
 ) => {
   try {
+    const userId = req.user?.userId;
+    
+    if (!userId) {
+      throw new AppError("Unauthorized - no user in request", 401);
+    }
+
+    await logoutUser(userId);
+
+
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
+
+    req.user = undefined;
 
     return res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
@@ -105,13 +116,13 @@ export const refreshTokenHandler = async (
 
     res.cookie("accessToken", newAccessToken, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 15 * 60 * 1000,
     });
 
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    }); 
 
     return res.status(200).json({ accessToken: newAccessToken });
   } catch (error) {

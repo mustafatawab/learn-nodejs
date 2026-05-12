@@ -129,6 +129,16 @@ export const refreshToken = async (token: string) => {
   
 };
 
+
+export const logoutUser = async (userId: string) => {
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      refreshToken: null,
+    },
+  });
+};
+
 export const forgotPassword = async (input: ForgotPasswordInput) => {
   const user = await prisma.user.findUnique({
     where: { email: input.email },
