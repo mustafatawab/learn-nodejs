@@ -6,6 +6,7 @@ import { authRouter } from "./src/module/auth/auth.router";
 import cors from "cors";
 import { authenticate } from "./src/shared/middleware/auth.middleware";
 import { AppError } from "./src/shared/error/AppError";
+import { csrfMiddleware } from "./src/shared/middleware/csrf.middleware";
 
 export const app = express();
 
@@ -22,6 +23,9 @@ app.use(cookieParser());
 
 //  parses incoming JSON request bodies
 app.use(express.json());
+
+// CSRF Middleware should be registered after authentication middleware, so we can skip CSRF checks for public routes and apply it only to protected routes.
+app.use(csrfMiddleware); 
 
 // registered before authenticate, so login/register don't require a token
 app.use("/api/auth", authRouter);

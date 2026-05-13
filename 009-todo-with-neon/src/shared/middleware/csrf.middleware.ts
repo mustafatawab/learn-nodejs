@@ -11,8 +11,6 @@ const CSRF_EXEMPT_PATHS = [
   "/api/auth/reset-password",
   "/api/auth/setup-account",
   "/api/auth/setup-account-info",
-  "/api/auth/me",
-  "/api/auth/refresh-token",
 ];
 
 export const generateCsrfToken = () => {
@@ -20,7 +18,9 @@ export const generateCsrfToken = () => {
 };
 
 const isCsrfExempt = (path: string): boolean => {
-  return CSRF_EXEMPT_PATHS.some((exemptPath) => path.startsWith(exemptPath));
+  return CSRF_EXEMPT_PATHS.some(
+    (exemptPath) => path === exemptPath || path.startsWith(exemptPath),
+  );
 };
 
 export const csrfMiddleware = (
