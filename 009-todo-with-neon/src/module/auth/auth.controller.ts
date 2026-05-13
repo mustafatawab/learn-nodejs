@@ -33,7 +33,7 @@ export const loginUserHandler = async (
 
     res.cookie("accessToken", result.accessToken, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 15 * 60 * 1000,
     });
 
     res.cookie("refreshToken", result.refreshToken, {
@@ -41,7 +41,12 @@ export const loginUserHandler = async (
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    return res.status(200).json({ message: "User logged in successfully" });
+    res.cookie("csrfToken", result.csrfToken, {
+      httpOnly: false,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({ message: "User logged in successfully" , result });
   } catch (error) {
     return next(error);
   }
@@ -112,6 +117,10 @@ export const refreshTokenHandler = async (
   try {
     const token = req.cookies.refreshToken;
 
+    if (!token) {
+      throw new AppError("No refresh token provided", 400);
+    }
+  
     const { newAccessToken, newRefreshToken } = await refreshToken(token);
 
     res.cookie("accessToken", newAccessToken, {

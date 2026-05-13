@@ -1,5 +1,6 @@
 import { AppError } from "../../shared/error/AppError";
 import { prisma } from "../../shared/lib/prisma";
+import { generateCsrfToken } from "../../shared/middleware/csrf.middleware";
 
 import type {
   RegisterInput,
@@ -58,6 +59,8 @@ export const loginUser = async (input: LoginInput) => {
 
   const refreshToken = generateRefreshToken(payload, "7d");
 
+  const csrfToken = generateCsrfToken();
+
   await prisma.user.update({
     where: { id: user.id },
     data: {
@@ -65,9 +68,11 @@ export const loginUser = async (input: LoginInput) => {
     },
   });
 
+
   return {
     accessToken,
     refreshToken,
+    csrfToken,
   };
 };
 
@@ -111,7 +116,7 @@ export const refreshToken = async (token: string) => {
       email: decoded.email,
     };
 
-    const newAccessToken = generateToken(payload, "1d");
+    const newAccessToken = generateToken(payload, "15m");
 
     const newRefreshToken = generateRefreshToken(payload, "7d");
 
@@ -122,9 +127,12 @@ export const refreshToken = async (token: string) => {
       },
     });
 
+    const csrfToken = generateCsrfToken();
+
     return {
       newAccessToken,
       newRefreshToken,
+      csrfToken,
     };
   
 };
