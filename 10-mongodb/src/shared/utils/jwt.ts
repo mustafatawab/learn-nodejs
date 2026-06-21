@@ -9,7 +9,7 @@ interface TokenPayload {
 
 export const generateToken = (
   payload: TokenPayload,
-  expiresIn: SignOptions["expiresIn"],
+  expiresIn: SignOptions["expiresIn"] = "15m",
 ) => {
   return jwt.sign(payload, env.JWT_SECRET, {
     expiresIn,

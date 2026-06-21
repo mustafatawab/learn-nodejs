@@ -1,6 +1,12 @@
 import type { Request, Response, NextFunction } from "express";
 import * as userService from "./user.service";
 import { AppError } from "../../shared/error/AppError";
+import {
+  generateToken,
+  generateRefreshToken,
+  verifyAccessToken,
+  verifyRefreshToken,
+} from "../../shared/utils/jwt";
 
 export const createUserController = async (
   req: Request,
@@ -15,14 +21,19 @@ export const createUserController = async (
   }
 };
 
-export const loginUserController = async (req: Request, res: Response, next: NextFunction) => {
+export const loginUserController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-      const result = await userService.loginUserService(req.body)
-      return res.status(200).json({message : "User Logged In successfully"})
+    const result = await userService.loginUserService(req.body);
+    // const token = generateToken()
+    return res.status(200).json({ message: "User Logged In successfully" });
   } catch (error) {
-    return next(error)
+    return next(error);
   }
-}
+};
 
 export const getAllUserController = async (
   req: Request,
