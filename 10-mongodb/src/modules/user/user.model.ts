@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import type { IUser } from "./user.interface";
+import { string } from "zod";
 
 const userSchema = new mongoose.Schema<IUser>(
   {
@@ -13,6 +14,11 @@ const userSchema = new mongoose.Schema<IUser>(
       type: String,
       required: true,
       unique: true,
+    },
+
+    password : {
+      type: String,
+      required: true,
     },
 
     age: {
