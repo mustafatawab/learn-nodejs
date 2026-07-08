@@ -1,6 +1,8 @@
 FROM node:22-alpine AS builder
 
 LABEL name="mustafatawab"
+LABEL version="1.0"
+LABEL description="this is just testing todo app with docker "
 
 WORKDIR /app
 
