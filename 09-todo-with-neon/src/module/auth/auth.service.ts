@@ -1,20 +1,20 @@
-import { AppError } from "../../shared/error/AppError";
-import { prisma } from "../../shared/lib/prisma";
-import { generateCsrfToken } from "../../shared/middleware/csrf.middleware";
+import { AppError } from "../../shared/error/AppError.js";
+import { prisma } from "../../shared/lib/prisma.js";
+import { generateCsrfToken } from "../../shared/middleware/csrf.middleware.js";
 
 import type {
   RegisterInput,
   LoginInput,
   ForgotPasswordInput,
   ResetPasswordInput,
-} from "./auth.schema";
-import { hashPassword, comparePasswords } from "../../shared/utils/hash";
+} from "./auth.schema.js";
+import { hashPassword, comparePasswords } from "../../shared/utils/hash.js";
 import {
   generateToken,
   generateRefreshToken,
   verifyAccessToken,
   verifyRefreshToken,
-} from "../../shared/utils/jwt";
+} from "../../shared/utils/jwt.js";
 
 export const registerUser = async (input: RegisterInput) => {
   console.log("registering user");

@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import type { Request, Response, NextFunction } from "express";
-import { AppError } from "../error/AppError";
+import { AppError } from "../error/AppError.js";
 
 const SAFE_METHODS = ["GET", "HEAD", "OPTIONS"];
 

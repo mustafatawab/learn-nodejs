@@ -1,9 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
-import { registerUser, loginUser, getMe, refreshToken, logoutUser } from "./auth.service";
+import { registerUser, loginUser, getMe, refreshToken, logoutUser } from "./auth.service.js";
 
-import { registerSchema, loginSchema } from "./auth.schema";
-import { AppError } from "../../shared/error/AppError";
-import { verifyAccessToken } from "../../shared/utils/jwt";
+import { registerSchema, loginSchema } from "./auth.schema.js";
+import { AppError } from "../../shared/error/AppError.js";
+import { verifyAccessToken } from "../../shared/utils/jwt.js";
 
 export const registerUserHandler = async (
   req: Request,

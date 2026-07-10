@@ -5,9 +5,9 @@ import {
   deleteTodo,
   getSingleTodo,
   getTodos,
-} from "./todo.service";
+} from "./todo.service.js";
 
-import { todoCreateSchema, todoUpdateSchema } from "./todo.schema";
+import { todoCreateSchema, todoUpdateSchema } from "./todo.schema.js";
 
 export const createTodoHandler = async (
   req: Request,

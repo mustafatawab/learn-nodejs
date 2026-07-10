@@ -1,12 +1,12 @@
 import express from "express";
 import type { Request, Response, NextFunction } from "express";
-import { todoRouter } from "./src/module/todo/todo.router";
+import { todoRouter } from "./src/module/todo/todo.router.js";
 import cookieParser from "cookie-parser";
-import { authRouter } from "./src/module/auth/auth.router";
+import { authRouter } from "./src/module/auth/auth.router.js";
 import cors from "cors";
-import { authenticate } from "./src/shared/middleware/auth.middleware";
-import { AppError } from "./src/shared/error/AppError";
-import { csrfMiddleware } from "./src/shared/middleware/csrf.middleware";
+import { authenticate } from "./src/shared/middleware/auth.middleware.js";
+import { AppError } from "./src/shared/error/AppError.js";
+import { csrfMiddleware } from "./src/shared/middleware/csrf.middleware.js";
 
 export const app = express();
 

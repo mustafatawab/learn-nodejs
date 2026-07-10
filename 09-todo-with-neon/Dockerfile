@@ -19,18 +19,23 @@ COPY prisma ./prisma
 
 RUN npm install
 
+# RUN npx prisma generate --no-config
+
 COPY . .
 
-# RUN npx prisma generate
+
+RUN npm run build
+
 
 FROM node:22-alpine AS runner
 
 WORKDIR /app
 
-COPY --from=builder ./app/node_modules ./node_modules
-COPY --from=builder ./app/prisma ./prisma
-COPY --from=builder ./app/package*.json ./
-COPY --from=builder ./app ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/src/generated ./generated
 
 EXPOSE 4000
 

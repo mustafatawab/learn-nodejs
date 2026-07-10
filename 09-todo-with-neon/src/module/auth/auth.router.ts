@@ -5,8 +5,8 @@ import {
   getMeHandler,
   logoutUserHandler,
   refreshTokenHandler,
-} from "./auth.controller";
-import { authenticate } from "../../shared/middleware/auth.middleware";
+} from "./auth.controller.js";
+import { authenticate } from "../../shared/middleware/auth.middleware.js";
 
 const router = Router();
 

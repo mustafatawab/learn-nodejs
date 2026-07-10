@@ -1,6 +1,6 @@
-import type { TodoCreateInput, TodoUpdateInput } from "./todo.schema";
-import { prisma } from "../../shared/lib/prisma";
-import { AppError } from "../../shared/error/AppError";
+import type { TodoCreateInput, TodoUpdateInput } from "./todo.schema.js";
+import { prisma } from "../../shared/lib/prisma.js";
+import { AppError } from "../../shared/error/AppError.js";
 
 
 export const createTodo = async (input: TodoCreateInput , userId : string) => {
